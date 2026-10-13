@@ -1,0 +1,66 @@
+{
+  "name": "wp-fleet-monitor",
+  "version": "0.1.0",
+  "description": "Scheduled health checks for a fleet of WordPress sites: uptime, response time, TLS expiry, REST API, core and plugin versions.",
+  "license": "MIT",
+  "author": "Oleksii Shaposhnikov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plazorax/wp-fleet-monitor.git"
+  },
+  "keywords": [
+    "wordpress",
+    "monitoring",
+    "uptime",
+    "ssl",
+    "github-actions",
+    "cli"
+  ],
+  "private": true,
+  "type": "module",
+  "bin": {
+    "wp-fleet-monitor": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "action.yml",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^4.1.11"
+  }
+}

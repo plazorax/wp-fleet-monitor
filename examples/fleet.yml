@@ -1,0 +1,23 @@
+# wp-fleet-monitor configuration. Every key except `sites` is optional;
+# the values below are the defaults. See docs/configuration.md.
+concurrency: 4 # sites checked in parallel
+timeoutMs: 15000 # per request
+exitOn: fail # exit 1 on: fail | warn | never
+
+thresholds:
+  responseTimeMs: { warn: 2000, fail: 8000 } # home page fetch time
+  sslDays: { warn: 21, fail: 7 } # days until certificate expiry
+
+notifications:
+  slack:
+    webhookUrlEnv: SLACK_WEBHOOK_URL # env var holding the incoming-webhook URL
+    notifyOn: warn # warn | fail
+
+sites:
+  - name: WordPress News
+    url: https://wordpress.org/news/
+    tags: [public]
+    plugins: [akismet, jetpack]
+  - name: Make WordPress Core
+    url: https://make.wordpress.org/core/
+    tags: [public]

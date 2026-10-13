@@ -1,0 +1,75 @@
+name: WordPress Fleet Monitor
+description: Check a fleet of WordPress sites for downtime, slow pages, expiring certificates and outdated core or plugins.
+author: Oleksii Shaposhnikov
+branding:
+  icon: activity
+  color: blue
+
+inputs:
+  config:
+    description: Path to the fleet config, relative to the workspace.
+    default: fleet.yml
+  tags:
+    description: Space-separated tags; when set, only sites with one of them are checked.
+    default: ''
+  exit-on:
+    description: Fail the step on "fail", "warn" or "never". Empty uses the config value.
+    default: ''
+  slack-webhook-url:
+    description: Slack incoming-webhook URL (pass a secret). Exported as SLACK_WEBHOOK_URL when set.
+    default: ''
+  node-version:
+    description: Node.js version used to build and run the tool.
+    default: '22'
+
+outputs:
+  status:
+    description: Overall result, "ok", "warn" or "fail".
+    value: ${{ steps.check.outputs.status }}
+  report:
+    description: Path to the JSON report on the runner.
+    value: ${{ steps.check.outputs.report }}
+
+# Composite action: builds the TypeScript sources from this repository at the
+# referenced commit, so no compiled bundle has to be committed.
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Build wp-fleet-monitor
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --no-audit --no-fund --ignore-scripts && npm run build
+
+    - id: check
+      name: Check sites
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        INPUT_CONFIG: ${{ inputs.config }}
+        INPUT_TAGS: ${{ inputs.tags }}
+        INPUT_EXIT_ON: ${{ inputs.exit-on }}
+        INPUT_SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+      run: |
+        report="$RUNNER_TEMP/wp-fleet-report.json"
+        args=(--config "$INPUT_CONFIG" --json-file "$report" --markdown "$GITHUB_STEP_SUMMARY")
+        # Split on whitespace without glob expansion.
+        read -r -a tags <<< "$INPUT_TAGS"
+        for tag in "${tags[@]}"; do args+=(--tag "$tag"); done
+        if [ -n "$INPUT_EXIT_ON" ]; then args+=(--exit-on "$INPUT_EXIT_ON"); fi
+        # Only override SLACK_WEBHOOK_URL when the input is set, so a job-level env still works.
+        if [ -n "$INPUT_SLACK_WEBHOOK_URL" ]; then export SLACK_WEBHOOK_URL="$INPUT_SLACK_WEBHOOK_URL"; fi
+
+        set +e
+        node "$ACTION_PATH/dist/cli.js" "${args[@]}"
+        code=$?
+        set -e
+
+        if [ -f "$report" ]; then
+          echo "report=$report" >> "$GITHUB_OUTPUT"
+          echo "status=$(node -p 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).status' "$report")" >> "$GITHUB_OUTPUT"
+        fi
+        exit "$code"
