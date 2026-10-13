@@ -1,4 +1,4 @@
-# wp-fleet-monitor
+# WP Fleet Monitor
 
 ![CI](https://github.com/plazorax/wp-fleet-monitor/actions/workflows/ci.yml/badge.svg)
 
