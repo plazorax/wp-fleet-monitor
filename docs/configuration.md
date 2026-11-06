@@ -40,12 +40,12 @@ sites:
     plugins: [akismet, woocommerce]  # optional WordPress.org plugin slugs
 ```
 
-- `url` is normalised to end with `/`, so a WordPress install in a sub-directory works:
+- `url` is normalized to end with `/`, so a WordPress install in a sub-directory works:
   `wp-json/`, `?feed=rss2` and `wp-content/plugins/...` are resolved below it. Use the
   canonical URL of the site; redirects are followed but paths are built from the configured URL.
 - `plugins` are WordPress.org slugs (the directory name in `wp-content/plugins/`). Duplicates
   are removed. Plugins that are not on WordPress.org are reported as `unknown`.
-- Two sites with the same normalised URL are a config error.
+- Two sites with the same normalized URL are a config error.
 
 ## Slack
 

@@ -224,7 +224,7 @@ describe('runFleet', () => {
     sites,
   });
 
-  it('summarises sites and asks WordPress.org once per run', async () => {
+  it('summarizes sites and asks WordPress.org once per run', async () => {
     const { fetch, calls } = mockFetch({
       'https://a.example/': HOME,
       'https://b.example/': HOME,

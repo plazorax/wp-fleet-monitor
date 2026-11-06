@@ -86,7 +86,7 @@ describe('validateConfig errors', () => {
       concurrency: 0,
       timeoutMs: 'fast',
       exitOn: 'always',
-      colour: true,
+      color: true,
       thresholds: { responseTimeMs: { warn: 5000, fail: 1000 }, sslDays: { warn: 3, fail: 10 } },
       notifications: { slack: { webhookUrlEnv: 'https://hooks.slack.com/services/x', notifyOn: 'ok' } },
       sites: [
@@ -98,7 +98,7 @@ describe('validateConfig errors', () => {
       ],
     });
     expect(issues).toEqual([
-      'colour: unknown key',
+      'color: unknown key',
       'concurrency: must be an integer >= 1',
       'timeoutMs: must be an integer >= 1',
       'exitOn: must be one of warn, fail, never',
@@ -116,7 +116,7 @@ describe('validateConfig errors', () => {
     ]);
   });
 
-  it('rejects duplicate sites after normalisation', () => {
+  it('rejects duplicate sites after normalization', () => {
     expect(issuesOf({ sites: [{ url: 'https://example.com' }, { url: 'https://example.com/' }] })).toEqual([
       'sites: duplicate url https://example.com/',
     ]);

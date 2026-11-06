@@ -136,7 +136,7 @@ function parseSite(value: unknown, index: number, v: Validator): SiteConfig | nu
   const tags = v.stringList(value.tags, `${path}.tags`);
 
   if (!url) return null;
-  // Normalise to a directory URL so relative paths like `wp-json/` resolve under it.
+  // Normalize to a directory URL so relative paths like `wp-json/` resolve under it.
   if (!url.pathname.endsWith('/')) url.pathname += '/';
   url.hash = '';
   return {

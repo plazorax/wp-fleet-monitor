@@ -14,7 +14,7 @@ function table(rows: string[][]): string {
   return [line(header ?? []), widths.map((width) => '-'.repeat(width)).join('  '), ...body.map(line)].join('\n');
 }
 
-/** Plain-text table plus a list of problems; no colours so it reads the same in CI logs. */
+/** Plain-text table plus a list of problems; no colors so it reads the same in CI logs. */
 export function renderConsole(report: FleetReport): string {
   const rows = report.sites.map((site) => [
     site.name,

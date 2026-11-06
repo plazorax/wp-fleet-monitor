@@ -8,7 +8,7 @@ export function escapeMarkdown(text: string): string {
   return text.replace(/[\\|*_`[\]<>]/g, (char) => `\\${char}`).replace(/\r?\n/g, ' ');
 }
 
-/** GitHub-flavoured Markdown, suitable for $GITHUB_STEP_SUMMARY. */
+/** GitHub-flavored Markdown, suitable for $GITHUB_STEP_SUMMARY. */
 export function renderMarkdown(report: FleetReport): string {
   const { ok, warn, fail, total } = report.summary;
   const lines = [

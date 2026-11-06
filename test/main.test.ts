@@ -106,7 +106,7 @@ describe('main', () => {
     expect(slackCall?.[1]?.body).toContain('actions/runs/42|Full report');
   });
 
-  it('honours --exit-on, --tag, --json and --no-slack', async () => {
+  it('honors --exit-on, --tag, --json and --no-slack', async () => {
     const { fetch, calls } = mockFetch({ ...HEALTHY_ROUTES, ...OUTDATED_ROUTES });
     const run = io(fetch, { SLACK_WEBHOOK_URL: 'https://hooks.slack.test/x' });
     const code = await main(
